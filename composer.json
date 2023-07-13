@@ -1,0 +1,41 @@
+{
+    "name": "cotein/api-afip",
+    "description": "Consumir los web services de Afip",
+    "autoload": {
+        "psr-4": {
+            "Cotein\\ApiAfip\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Cotein\\ApiAfip\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Diego Barrueta",
+            "email": "diego.barrueta@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Cotein\\ApiAfip\\CoteinApiAfipWebServiceProvider"
+            ],
+            "aliases": {
+                "AfipWebService": "Cotein\\ApiAfip\\Facades\\AfipWebService"
+            }
+        }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.5"
+    },
+    "require": {
+        "jenssegers/date": "^4.0"
+    }
+}
