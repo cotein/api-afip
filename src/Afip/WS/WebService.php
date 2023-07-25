@@ -44,7 +44,7 @@ abstract class WebService
     {
         $this->service = strtoupper($service);
         $this->environment = strtoupper($environment);
-        $this->user = $user;
+        //$this->user = $user;
 
         $this->cuit = env('WS_AFIP_CUIT');
 
@@ -55,9 +55,40 @@ abstract class WebService
         ini_set("soap.wsdl_cache_enabled", 0);
         ini_set('soap.wsdl_cache_ttl', 0);
 
-        /* $this->token = $this->afipModel->token;
+        if ( //no existe token
+            !AfipToken::where('ws', $this->service)
+                ->where('active', true)
+                ->where('environment', $this->environment)
+                ->where('company_id', $user->company_id)
+                ->exists()
+        ) {
+            //persisto los datos
+            $this->create_TA($service);
 
-        $this->sign = $this->afipModel->sign; */
+            $this->saveAfipModel($user);
+        } else {
+
+            $this->afipModel = AfipToken::where('ws', $this->service)
+                ->where('environment', $this->environment)
+                ->where('active', true)
+                ->where('company_id', $user->company_id)
+                ->get()->first();
+
+            if (!$this->afipModel->isActive()) {
+
+                $this->afipModel->active = false;
+                $this->afipModel->save();
+
+                $this->create_TA($service);
+
+                $this->saveAfipModel($user);
+            }
+        }
+
+        $this->token = $this->afipModel->token;
+
+        $this->sign = $this->afipModel->sign;
+
         $this->create_TA($service);
 
         $this->Auth = [
@@ -74,7 +105,6 @@ abstract class WebService
      */
     function saveAfipModel($user = null): void
     {
-
         $this->afipModel = new AfipToken();
         $this->afipModel->name = $this->service;
         $this->afipModel->unique_id = $this->get_unique_id();
@@ -84,25 +114,9 @@ abstract class WebService
         $this->afipModel->sign = $this->get_sign();
         $this->afipModel->environment = $this->environment;
         $this->afipModel->active = true;
-        /* $this->afipModel->user_id = $user->id;
-        $this->afipModel->company_id = $user->company->id; */
+        $this->afipModel->user_id = $user->id;
+        $this->afipModel->company_id = $user->company_id;
         $this->afipModel->save();
-    }
-
-    function saveToken($service)
-    {
-        if (
-            !AfipToken::where('ws', $this->service)
-                ->where('active', true)
-                ->where('environment', $this->environment)
-                ->exists()
-        ) {
-            //persisto los datos
-            $this->create_TA($service);
-        } else {
-
-            $this->afipModel = AfipToken::where('ws', $this->service)->where('environment', $this->environment)->where('active', true)->get()->first();
-        }
     }
 
     /**
