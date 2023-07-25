@@ -18,7 +18,7 @@ class WSPUC13 extends WebService
         $this->connect();
     }
 
-    public function connect()
+    public function connect(): void
     {
         try {
 
