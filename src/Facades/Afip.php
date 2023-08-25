@@ -5,11 +5,11 @@ namespace Cotein\ApiAfip\Facades;
 use Illuminate\Support\Facades\Facade;
 
 
-class AfipWebService extends Facade
+class Afip extends Facade
 {
 
     protected static function getFacadeAccessor()
     {
-        return 'AfipWebService';
+        return 'Afip';
     }
 }

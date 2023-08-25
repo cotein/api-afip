@@ -38,19 +38,16 @@ abstract class WebService
 
     public $afipModel;
 
-    public $user;
-
-    public function __construct($service, $environment, $user = null)
+    public function __construct($service, $environment, $company_cuit, $company_id, $user_id)
     {
         $this->service = strtoupper($service);
         $this->environment = strtoupper($environment);
         //$this->user = $user;
-
         $this->cuit = env('WS_AFIP_CUIT');
 
-        (is_null($user))
+        (is_null($company_cuit))
             ? $this->cuitRepresentada = env('WS_AFIP_CUIT_REPRESENTADA')
-            : $this->cuitRepresentada = $user->company_cuit;
+            : $this->cuitRepresentada = $company_cuit;
 
         ini_set("soap.wsdl_cache_enabled", 0);
         ini_set('soap.wsdl_cache_ttl', 0);
@@ -59,29 +56,30 @@ abstract class WebService
             !AfipToken::where('ws', $this->service)
                 ->where('active', true)
                 ->where('environment', $this->environment)
-                ->where('company_id', $user->company_id)
+                ->where('company_id', $company_id)
                 ->exists()
         ) {
             //persisto los datos
             $this->create_TA($service);
 
-            $this->saveAfipModel($user);
+            $this->saveAfipModel($company_id, $user_id);
         } else {
 
             $this->afipModel = AfipToken::where('ws', $this->service)
                 ->where('environment', $this->environment)
                 ->where('active', true)
-                ->where('company_id', $user->company_id)
+                ->where('company_id', $company_id)
                 ->get()->first();
 
             if (!$this->afipModel->isActive()) {
 
                 $this->afipModel->active = false;
+
                 $this->afipModel->save();
 
                 $this->create_TA($service);
 
-                $this->saveAfipModel($user);
+                $this->saveAfipModel($company_id, $user_id);
             }
         }
 
@@ -103,10 +101,10 @@ abstract class WebService
      * Registra en la base de datos los datos del webServices que se conecta
      * @return void
      */
-    function saveAfipModel($user = null): void
+    function saveAfipModel($companyId, $userId): void
     {
         $this->afipModel = new AfipToken();
-        $this->afipModel->name = $this->service;
+        $this->afipModel->ws = $this->service;
         $this->afipModel->unique_id = $this->get_unique_id();
         $this->afipModel->generation_time = $this->get_generationTime();
         $this->afipModel->expiration_time = $this->get_expirationTime();
@@ -114,8 +112,8 @@ abstract class WebService
         $this->afipModel->sign = $this->get_sign();
         $this->afipModel->environment = $this->environment;
         $this->afipModel->active = true;
-        $this->afipModel->user_id = $user->id;
-        $this->afipModel->company_id = $user->company_id;
+        $this->afipModel->user_id = $userId;
+        $this->afipModel->company_id = $companyId;
         $this->afipModel->save();
     }
 

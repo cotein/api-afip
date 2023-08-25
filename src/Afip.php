@@ -5,7 +5,7 @@ namespace Cotein\ApiAfip;
 use Cotein\ApiAfip\Afip\WS\WebService;
 use Cotein\ApiAfip\Afip\WS\WS_CONST;
 
-class AfipWebService
+class Afip
 {
     /**
      * Method findWebService
@@ -16,12 +16,12 @@ class AfipWebService
      *
      * @return WebService
      */
-    public static function findWebService(string $service, string $environment, $user = null): WebService
+    public static function findWebService(string $service, string $environment, $company_cuit, $company_id, $user_id): WebService
     {
         $serv = strtoupper($service);
 
         $ws = WS_CONST::find($serv);
 
-        return new $ws($environment, $user);
+        return new $ws($environment, $company_cuit, $company_id, $user_id);
     }
 }

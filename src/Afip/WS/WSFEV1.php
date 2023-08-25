@@ -22,7 +22,7 @@ class WSFEV1 extends WebService
     {
         try {
 
-            $wsdl = "{$this->service}_{$this->environment}";
+            $wsdl = strtoupper(self::SERVICE) . '_' . $this->environment;
 
             $ws = WS_CONST::getWSDL($wsdl);
 
@@ -38,6 +38,10 @@ class WSFEV1 extends WebService
                     'stream_context' => stream_context_create(['ssl' => ['ciphers' => 'AES256-SHA', 'verify_peer' => false, 'verify_peer_name' => false]])
                 ]
             );
+
+            /* $header = new \SoapHeader('Access-Control-Allow-Origin', '*');
+
+            $this->soapHttp->__setSoapHeaders($header); */
         } catch (\Exception $e) {
 
             Log::error("Error en try catch WSFEV1" . $e->getMessage() . ' - ' . $e->getCode());

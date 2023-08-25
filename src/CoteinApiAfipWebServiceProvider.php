@@ -22,8 +22,8 @@ class CoteinApiAfipWebServiceProvider extends ServiceProvider
     public function register(): void
     {
         //en éste método registro los binds
-        $this->app->bind('AfipWebService', function () {
-            return new AfipWebService();
+        $this->app->bind('Afip', function () {
+            return new Afip();
         });
     }
 }
