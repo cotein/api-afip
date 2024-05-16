@@ -9,11 +9,15 @@ class WSCONSTANCIAINSCRIPCION extends WebService
 {
     const SERVICE = 'ws_sr_constancia_inscripcion';
 
-    public function __construct($environment = 'testing')
+    public function __construct($environment = 'testing', $company_cuit, $company_id, $user_id)
     {
-        parent::__construct(self::SERVICE, $environment, 20227339730, 1, 1);
+        //parent::__construct(self::SERVICE, $environment, 20227339730, 1, 1);
+        parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
-        $this->afip_params['Auth'] = $this->Auth;
+        $this->afip_params = [];
+        $this->afip_params['token'] = $this->Auth['Token'];
+        $this->afip_params['sign'] = $this->Auth['Sign'];
+        $this->afip_params['cuitRepresentada'] = $this->cuitRepresentada;
 
         $this->connect();
     }
@@ -42,10 +46,39 @@ class WSCONSTANCIAINSCRIPCION extends WebService
      *
      * @return getPersonaResponse
      */
-    public function getPersona($consulta)
+    public function getPersona($cuit)
     {
+        $this->afip_params['idPersona'] = $cuit;
+
         try {
-            $result = $this->soapHttp->getPersona($consulta);
+            $result = $this->soapHttp->getPersona($this->afip_params);
+
+            if (is_soap_fault($result)) {
+                return response()->json($result, 500);
+            }
+
+            $r =  json_decode(json_encode($result), true);
+
+            return $r;
+        } catch (\Exception $e) {
+
+            throw new \Exception($e->getMessage(), $e->getCode());
+        }
+    }
+
+    /**
+     * Method getPersona_v2
+     *
+     * @param $cuit $cuit Cuit del sujeto a buscar, sólo números
+     *
+     * @return getPersonaResponse
+     */
+    public function getPersona_v2($cuit)
+    {
+        $this->afip_params['idPersona'] = $cuit;
+
+        try {
+            $result = $this->soapHttp->getPersona_v2($this->afip_params);
 
             if (is_soap_fault($result)) {
                 return response()->json($result, 500);

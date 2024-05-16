@@ -9,9 +9,19 @@ class WSFEV1 extends WebService
 {
     const SERVICE = 'wsfe';
 
-    public function __construct($environment = 'testing', $user = null)
+    /**
+     * Method __construct
+     *
+     * @param $environment $environment, entorno en AFIP testing ó production
+     * @param $cuit=20227339730 $cuit de la empresa que va a realizar la 
+     * facturación electrónica que ha delegado el servicio a nombre de DMIT.
+     * Por defecto mi CUIT
+     *
+     * @return void
+     */
+    public function __construct($environment = 'testing', $company_cuit = 20227339730, $company_id, $user_id)
     {
-        parent::__construct(self::SERVICE, $environment, $user);
+        parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
         $this->afip_params['Auth'] = $this->Auth;
 
@@ -67,14 +77,54 @@ class WSFEV1 extends WebService
         return $this->soapHttp->FEParamGetTiposPaises($this->afip_params);
     }
 
+    public function FEParamGetPtosVenta()
+    {
+        return $this->soapHttp->FEParamGetPtosVenta($this->afip_params);
+    }
+
+    public function FEParamGetTiposCbte()
+    {
+        return $this->soapHttp->FEParamGetTiposCbte($this->afip_params);
+    }
+
+    public function FEParamGetTiposConcepto()
+    {
+        return $this->soapHttp->FEParamGetTiposConcepto($this->afip_params);
+    }
+
+    public function FEParamGetTiposDoc()
+    {
+        return $this->soapHttp->FEParamGetTiposDoc($this->afip_params);
+    }
+
+    public function FEParamGetTiposIva()
+    {
+        return $this->soapHttp->FEParamGetTiposIva($this->afip_params);
+    }
+
+    public function FEParamGetTiposMonedas()
+    {
+        return $this->soapHttp->FEParamGetTiposMonedas($this->afip_params);
+    }
+
+    public function FEParamGetTiposOpcional()
+    {
+        return $this->soapHttp->FEParamGetTiposOpcional($this->afip_params);
+    }
+
     public function FEParamGetTiposTributos()
     {
         return $this->soapHttp->FEParamGetTiposTributos($this->afip_params);
     }
 
-    public function FEParamGetPtosVenta()
+    public function FEParamGetCotizacion()
     {
-        return $this->soapHttp->FEParamGetPtosVenta($this->afip_params);
+        return $this->soapHttp->FEParamGetCotizacion($this->afip_params);
+    }
+
+    public function FEParamGetActividades()
+    {
+        return $this->soapHttp->FEParamGetActividades($this->afip_params);
     }
 
     public function ConsultarComprobanteEmitido($CbteTipo, $PtoVta, $CbteNro)
@@ -88,5 +138,45 @@ class WSFEV1 extends WebService
         $this->afip_params['FeCompConsReq'] = $FeCompConsReq;
 
         return $this->soapHttp->FECompConsultar($this->afip_params);
+    }
+
+    /**
+     * Method FECompUltimoAutorizado
+     * Devuelve el número del último comprobante autorizado
+     * 
+     * @param $CbteTipo $CbteTipo [explicite description]
+     * @param $PtoVta $PtoVta [explicite description]
+     * @param $CbteNro $CbteNro [explicite description]
+     *
+     * @return void
+     */
+    public function FECompUltimoAutorizado($CbteTipo, $PtoVta)
+    {
+
+        $this->afip_params['CbteTipo'] = $CbteTipo;
+        $this->afip_params['PtoVta'] = $PtoVta;
+
+        return $this->soapHttp->FECompUltimoAutorizado($this->afip_params);
+    }
+
+    /**
+     * Method FECAESolicitar
+     *
+     * @param $FeCabReq $FeCabReq array - ver información en AFIP
+     * @param $FECAEDetRequest $FECAEDetRequest array - ver información en AFIP
+     *
+     * @return void
+     */
+    public function FECAESolicitar($FeCabReq, $FECAEDetRequest)
+    {
+
+        $this->afip_params['FeCAEReq'] = [
+            'FeCabReq' => $FeCabReq,
+            'FeDetReq' => [
+                'FECAEDetRequest' => $FECAEDetRequest
+            ]
+        ];
+
+        return $this->soapHttp->FECAESolicitar($this->afip_params);
     }
 }

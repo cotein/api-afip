@@ -10,9 +10,11 @@ class Afip
     /**
      * Method findWebService
      *  Retorna el Web Service de Afip que necesito
-     * @param string $service [explicite description]
-     * @param string $environment [explicite description]
-     * @param $user $user [explicite description]
+     * @param string $service nombre del ws de afip
+     * @param string $environment entorno donde se ejecuta el ws
+     * @param integer $company_cuit 
+     * @param integer $company_id 
+     * @param integer $user_id 
      *
      * @return WebService
      */

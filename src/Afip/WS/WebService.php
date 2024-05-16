@@ -2,11 +2,8 @@
 
 namespace Cotein\ApiAfip\Afip\WS;
 
+use Carbon\Carbon;
 use Cotein\ApiAfip\Models\AfipToken;
-use Jenssegers\Date\Date;
-use Illuminate\Support\Facades\Log;
-use Exception;
-use SoapClient;
 
 // URL DOC https://www.afip.gob.ar/fe/ayuda/documentos/wsfev1-COMPG.pdf
 
@@ -38,10 +35,21 @@ abstract class WebService
 
     public $afipModel;
 
+    /**
+     * Method __construct
+     *
+     * @param $service $service el nombre del SOAP Web service de AFIP
+     * @param $environment $environment entorno en AFIP testing ó production
+     * @param $company_cuit $company_cuit CUIT de la compañia que ejecuta el Web service
+     * @param $company_id $company_id ID de la compañia que ejecuta el Web service
+     * @param $user_id $user_id de quien ejecuta el Web service
+     *
+     * @return void
+     */
     public function __construct($service, $environment, $company_cuit, $company_id, $user_id)
     {
-        $this->service = strtoupper($service);
-        $this->environment = strtoupper($environment);
+        $this->service = strtoupper((string) $service);
+        $this->environment = strtoupper((string) $environment);
         //$this->user = $user;
         $this->cuit = env('WS_AFIP_CUIT');
 
@@ -52,7 +60,7 @@ abstract class WebService
         ini_set("soap.wsdl_cache_enabled", 0);
         ini_set('soap.wsdl_cache_ttl', 0);
 
-        if ( //no existe token
+        if ( //no existe token entonces lo creo
             !AfipToken::where('ws', $this->service)
                 ->where('active', true)
                 ->where('environment', $this->environment)
@@ -63,8 +71,18 @@ abstract class WebService
             $this->create_TA($service);
 
             $this->saveAfipModel($company_id, $user_id);
-        } else {
 
+            $this->token = $this->afipModel->token;
+
+            $this->sign = $this->afipModel->sign;
+
+            $this->Auth = [
+                'Token' => $this->get_Token(),
+                'Sign'  => $this->get_sign(),
+                'Cuit'  => $this->cuitRepresentada
+            ];
+        } else {
+            //acá entra por que existe el token
             $this->afipModel = AfipToken::where('ws', $this->service)
                 ->where('environment', $this->environment)
                 ->where('active', true)
@@ -80,14 +98,18 @@ abstract class WebService
                 $this->create_TA($service);
 
                 $this->saveAfipModel($company_id, $user_id);
+
+                $this->token = $this->afipModel->token;
+
+                $this->sign = $this->afipModel->sign;
+            } else {
+                $this->Auth = [
+                    'Token' => $this->get_Token(),
+                    'Sign'  => $this->get_sign(),
+                    'Cuit'  => $this->cuitRepresentada
+                ];
             }
         }
-
-        $this->token = $this->afipModel->token;
-
-        $this->sign = $this->afipModel->sign;
-
-        $this->create_TA($service);
 
         $this->Auth = [
             'Token' => $this->get_Token(),
@@ -326,15 +348,11 @@ abstract class WebService
 
     public function is_validTA()
     {
-        $c =  new Date;
+        $c =  new Carbon();
         $expirationTime = $c->parse($this->get_expirationTime());
         $currentTime    = $c->parse($c->now());
 
-        if (strtotime($currentTime) >= strtotime($expirationTime)) {
-            return false;
-        }
-
-        return true;
+        return $currentTime->gt($currentTime);
     }
 
     abstract public function connect(): void;

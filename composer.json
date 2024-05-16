@@ -36,6 +36,6 @@
         "orchestra/testbench": "^8.5"
     },
     "require": {
-        "jenssegers/date": "^4.0"
+        "nesbot/carbon": "^2.16"
     }
 }

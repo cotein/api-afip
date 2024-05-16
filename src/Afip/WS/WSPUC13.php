@@ -10,7 +10,7 @@ class WSPUC13 extends WebService
 
     public function __construct($environment = 'testing', $company_cuit, $company_id, $user_id)
     {
-        parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
+        parent::__construct(self::SERVICE, $environment, 20227339730, 1, 1);
 
         $this->afip_params = [];
         $this->afip_params['token'] = $this->Auth['Token'];
@@ -30,12 +30,12 @@ class WSPUC13 extends WebService
 
             $this->soapHttp = new \SoapClient($ws);
 
-            $header = new \SoapHeader('Access-Control-Allow-Origin', '*');
+            /* $header = new \SoapHeader('Access-Control-Allow-Origin', '*');
 
             $www = new \SoapHeader('Content-Type', 'text/xml');
 
             $this->soapHttp->__setSoapHeaders($header);
-            $this->soapHttp->__setSoapHeaders($www);
+            $this->soapHttp->__setSoapHeaders($www); */
         } catch (\Exception $e) {
 
             Log::error("Error en try catch WSPUC13" . $e->getMessage() . ' - ' . $e->getCode());
@@ -63,22 +63,12 @@ class WSPUC13 extends WebService
         return $this->soapHttp->__getFunctions();
     }
 
-    /**
-     * Method getPersona
-     *
-     * @param $cuit $cuit Cuit del sujeto a buscar, sólo números
-     *
-     * @return getPersonaResponse
-     */
-    public function getPersona($consulta)
+    public function getPersonaByDocumento($dni)
     {
+        $this->afip_params['documento'] = $dni;
         try {
-            /* $this->afip_params = [];
-            $this->afip_params['token'] = $this->Auth['Token'];
-            $this->afip_params['sign'] = $this->Auth['Sign'];
-            $this->afip_params['cuitRepresentada'] = $this->cuitRepresentada;
-            $this->afip_params['idPersona'] = floatval($cuit); */
-            $result = $this->soapHttp->getPersona($consulta);
+
+            $result = $this->soapHttp->getIdPersonaListByDocumento($this->afip_params);
 
             if (is_soap_fault($result)) {
                 return response()->json($result, 500);

@@ -9,9 +9,9 @@ class AfipToken extends Model
 {
     protected $table = 'afip_tokens';
 
-    public function isValidDate(): bool
+    public function isActive(): bool
     {
-        $date =  new Carbon();
+        /* $date =  new Carbon();
 
         $expirationTime = $date->parse($this->expiration_time);
 
@@ -21,10 +21,23 @@ class AfipToken extends Model
             return true; //inválido
         }
 
-        return false;
+        return false; */
+        // Check if the token is active
+        if (!$this->active) {
+            return false;
+        }
+
+        // Get the current time in UTC
+        $now = Carbon::now();
+
+        // Get the token expiration time in UTC
+        $expirationTime = Carbon::parse($this->expiration_time);
+
+        // Check if the current time is before the expiration time
+        return $now->lt($expirationTime);
     }
 
-    public function isActive(): bool
+    /*  public function isActive(): bool
     {
 
         if ($this->active && !$this->isValidDate()) {
@@ -32,5 +45,5 @@ class AfipToken extends Model
         }
 
         return false;
-    }
+    } */
 }
