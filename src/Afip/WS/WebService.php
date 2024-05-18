@@ -50,7 +50,6 @@ abstract class WebService
     {
         $this->service = strtoupper((string) $service);
         $this->environment = strtoupper((string) $environment);
-        //$this->user = $user;
         $this->cuit = env('WS_AFIP_CUIT');
 
         (is_null($company_cuit))
@@ -82,7 +81,6 @@ abstract class WebService
                 'Cuit'  => $this->cuitRepresentada
             ];
         } else {
-            //acá entra por que existe el token
             $this->afipModel = AfipToken::where('ws', $this->service)
                 ->where('environment', $this->environment)
                 ->where('active', true)
@@ -103,6 +101,7 @@ abstract class WebService
 
                 $this->sign = $this->afipModel->sign;
             } else {
+
                 $this->Auth = [
                     'Token' => $this->get_Token(),
                     'Sign'  => $this->get_sign(),
