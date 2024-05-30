@@ -9,7 +9,8 @@
     "scripts": {
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"
-        ]
+        ],
+        "post-install": "sudo chown -R www-data:www-data /var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml && sudo chmod -R 775 /var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml"
     },
     "autoload-dev": {
         "psr-4": {
