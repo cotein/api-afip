@@ -51,68 +51,33 @@ abstract class WebService
         $this->service = strtoupper((string) $service);
         $this->environment = strtoupper((string) $environment);
         $this->cuit = env('WS_AFIP_CUIT');
-
-        (is_null($company_cuit))
-            ? $this->cuitRepresentada = env('WS_AFIP_CUIT_REPRESENTADA')
-            : $this->cuitRepresentada = $company_cuit;
+        $this->cuitRepresentada = is_null($company_cuit) ? env('WS_AFIP_CUIT_REPRESENTADA') : $company_cuit;
 
         ini_set("soap.wsdl_cache_enabled", 0);
         ini_set('soap.wsdl_cache_ttl', 0);
 
-        if ( //no existe token entonces lo creo
-            !AfipToken::where('ws', $this->service)
-                ->where('active', true)
-                ->where('environment', $this->environment)
-                ->where('company_id', $company_id)
-                ->exists()
-        ) {
-            //persisto los datos
+        $this->afipModel = AfipToken::where('ws', $this->service)
+            ->where('active', true)
+            ->where('environment', $this->environment)
+            ->where('company_id', $company_id)
+            ->first();
+
+        if (!$this->afipModel) {
             $this->create_TA($service);
-
             $this->saveAfipModel($company_id, $user_id);
-
-            $this->token = $this->afipModel->token;
-
-            $this->sign = $this->afipModel->sign;
-
-            $this->Auth = [
-                'Token' => $this->get_Token(),
-                'Sign'  => $this->get_sign(),
-                'Cuit'  => $this->cuitRepresentada
-            ];
-        } else {
-            $this->afipModel = AfipToken::where('ws', $this->service)
-                ->where('environment', $this->environment)
-                ->where('active', true)
-                ->where('company_id', $company_id)
-                ->get()->first();
-
-            if (!$this->afipModel->isActive()) {
-
-                $this->afipModel->active = false;
-
-                $this->afipModel->save();
-
-                $this->create_TA($service);
-
-                $this->saveAfipModel($company_id, $user_id);
-
-                $this->token = $this->afipModel->token;
-
-                $this->sign = $this->afipModel->sign;
-            } else {
-
-                $this->Auth = [
-                    'Token' => $this->get_Token(),
-                    'Sign'  => $this->get_sign(),
-                    'Cuit'  => $this->cuitRepresentada
-                ];
-            }
+        } elseif (!$this->afipModel->isActive()) {
+            $this->afipModel->active = false;
+            $this->afipModel->save();
+            $this->create_TA($service);
+            $this->saveAfipModel($company_id, $user_id);
         }
 
+        $this->token = $this->afipModel->token;
+        $this->sign = $this->afipModel->sign;
+
         $this->Auth = [
-            'Token' => $this->get_Token(),
-            'Sign'  => $this->get_sign(),
+            'Token' => $this->token,
+            'Sign'  => $this->sign,
             'Cuit'  => $this->cuitRepresentada
         ];
     }
