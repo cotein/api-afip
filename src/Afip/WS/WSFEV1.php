@@ -2,6 +2,7 @@
 
 namespace Cotein\ApiAfip\Afip\WS;
 
+use Cotein\ApiAfip\Constantes;
 use Illuminate\Support\Facades\Log;
 
 
@@ -19,11 +20,14 @@ class WSFEV1 extends WebService
      *
      * @return void
      */
-    public function __construct($environment = 'testing', $company_cuit = 20227339730, $company_id, $user_id)
+    public function __construct($environment = 'testing', $company_cuit = Constantes::DIEGO_BARRUETA_CUIT, $company_id, $user_id)
     {
         parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
-        $this->afip_params['Auth'] = $this->Auth;
+        $this->afip_params = [];
+        $this->afip_params['token'] = $this->token;
+        $this->afip_params['sign'] = $this->sign;
+        $this->afip_params['cuitRepresentada'] = $this->cuitRepresentada;
 
         $this->connect();
     }
