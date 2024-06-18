@@ -10,7 +10,11 @@
         "post-autoload-dump": [
             "@php vendor/bin/testbench package:discover --ansi"
         ],
-        "post-install": "sudo chown -R www-data:www-data /var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml && sudo chmod -R 775 /var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml"
+        "post-install-cmd": [
+            "@php -r \"chown('-R', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@echo 'El paquete se instaló correctamente.'"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
