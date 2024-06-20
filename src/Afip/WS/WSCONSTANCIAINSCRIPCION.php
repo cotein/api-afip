@@ -39,12 +39,14 @@ class WSCONSTANCIAINSCRIPCION extends WebService
     public function getPersona($cuit)
     {
         $this->afip_params['idPersona'] = $cuit;
+
         return $this->callSoapMethod('getPersona');
     }
 
     public function getPersona_v2($cuit)
     {
         $this->afip_params['idPersona'] = $cuit;
+
         return $this->callSoapMethod('getPersona_v2');
     }
 
@@ -52,9 +54,11 @@ class WSCONSTANCIAINSCRIPCION extends WebService
     {
         try {
             $result = $this->soapHttp->$methodName($this->afip_params);
+
             if (is_soap_fault($result)) {
                 return response()->json($result, 500);
             }
+
             return json_decode(json_encode($result), true);
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());

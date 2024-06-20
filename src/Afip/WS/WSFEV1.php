@@ -25,9 +25,11 @@ class WSFEV1 extends WebService
         parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
         $this->afip_params = [
-            'token' => $this->token,
-            'sign' => $this->sign,
-            'cuitRepresentada' => $this->cuitRepresentada
+            'Auth' => [
+                'Token' => $this->token,
+                'Sign' => $this->sign,
+                'Cuit' => $this->cuitRepresentada
+            ]
         ];
 
         $this->connect();

@@ -49,6 +49,7 @@ class WSPUC13 extends WebService
     public function getPersonaByDocumento($dni)
     {
         $this->afip_params['documento'] = $dni;
+
         try {
             $result = $this->soapHttp->getIdPersonaListByDocumento($this->afip_params);
             if (is_soap_fault($result)) {
