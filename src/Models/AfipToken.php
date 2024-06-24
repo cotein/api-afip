@@ -27,14 +27,18 @@ class AfipToken extends Model
             return false;
         }
 
-        // Get the current time in UTC
-        $now = Carbon::now();
-
         // Get the token expiration time in UTC
+        $generationTime = Carbon::parse($this->generation_time);
         $expirationTime = Carbon::parse($this->expiration_time);
 
         // Check if the current time is before the expiration time
-        return $now->lt($expirationTime);
+        if ($generationTime->lt($expirationTime)) {
+            // generationTime es menor que expirationTime, el token está en el período válido
+            return true;
+        } else {
+            // generationTime no es menor que expirationTime, el token no está en el período válido
+            return false;
+        }
     }
 
     /*  public function isActive(): bool

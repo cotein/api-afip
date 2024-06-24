@@ -101,6 +101,7 @@ abstract class WebService
         $this->afipModel->user_id = $userId;
         $this->afipModel->company_id = $companyId;
         $this->afipModel->save();
+        $this->afipModel->refresh();
     }
 
     /**
