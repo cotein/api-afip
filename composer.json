@@ -20,7 +20,12 @@
             "@php -r \"chown('-R', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
             "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
             "@echo 'El paquete se actualizó correctamente.'"
-        ]
+        ],
+        "post-package-install": [
+            "@php -r \"chown('-R', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@echo 'El paquete se instaló correctamente.'"
+        ],
     },
     "autoload-dev": {
         "psr-4": {
