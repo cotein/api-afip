@@ -13,7 +13,7 @@ class WSCONSTANCIAINSCRIPCION extends WebService
 
     public function __construct($environment = 'testing', $company_cuit, $company_id, $user_id)
     {
-        parent::__construct(self::SERVICE, $environment, Constantes::DIEGO_BARRUETA_CUIT, 1, 1);
+        parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
         $this->afip_params = [
             'token' => $this->token,
