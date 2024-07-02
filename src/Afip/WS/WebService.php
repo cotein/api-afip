@@ -65,13 +65,18 @@ abstract class WebService
         if (!$this->afipModel) {
             $this->create_TA($service);
             $this->saveAfipModel($company_id, $user_id);
-        } elseif (!$this->afipModel->isActive()) {
-            $this->afipModel->active = false;
-            $this->afipModel->save();
-            $this->create_TA($service);
-            $this->saveAfipModel($company_id, $user_id);
+        } else {
+            // Verificar si el token ha expirado
+            $currentTime = time();
+            if ($currentTime > $this->afipModel->expiration_time || !$this->afipModel->isActive()) {
+                $this->afipModel->active = false;
+                $this->afipModel->save();
+                $this->create_TA($service);
+                $this->saveAfipModel($company_id, $user_id);
+            }
         }
 
+        // Actualizar las propiedades de la instancia con el token y la firma
         $this->token = $this->afipModel->token;
         $this->sign = $this->afipModel->sign;
 
