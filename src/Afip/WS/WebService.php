@@ -2,6 +2,7 @@
 
 namespace Cotein\ApiAfip\Afip\WS;
 
+use App\Src\Helpers\Afip;
 use Carbon\Carbon;
 use Cotein\ApiAfip\Models\AfipToken;
 
@@ -61,9 +62,8 @@ abstract class WebService
             ->where('company_id', $company_id)
             ->first();
 
-        $currentTime = time();
         // Verificar si el modelo de Afip existe y si el token está activo y no ha expirado
-        if (!$this->afipModel || $currentTime > $this->afipModel->expiration_time) {
+        if (!$this->afipModel || $this->afipModel->isActive() == false) {
             // Log para depuración
             error_log("Token expirado o no encontrado. Generando uno nuevo...");
 
@@ -72,14 +72,9 @@ abstract class WebService
                 $this->afipModel->active = false;
                 $this->afipModel->save();
             }
+
             $this->create_TA($service);
-            $this->saveAfipModel($company_id, $user_id);
-            // Recargar el modelo Afip después de crear y guardar el nuevo token
-            $this->afipModel = AfipToken::where('ws', $this->service)
-                ->where('active', true)
-                ->where('environment', $this->environment)
-                ->where('company_id', $company_id)
-                ->first();
+            $this->afipModel = $this->saveAfipModel($company_id, $user_id);
         }
 
         // Actualizar las propiedades de la instancia con el token y la firma
@@ -98,21 +93,23 @@ abstract class WebService
      * Registra en la base de datos los datos del webServices que se conecta
      * @return void
      */
-    function saveAfipModel($companyId, $userId): void
+    function saveAfipModel($companyId, $userId): AfipToken
     {
-        $this->afipModel = new AfipToken();
-        $this->afipModel->ws = $this->service;
-        $this->afipModel->unique_id = $this->get_unique_id();
-        $this->afipModel->generation_time = $this->get_generationTime();
-        $this->afipModel->expiration_time = $this->get_expirationTime();
-        $this->afipModel->token = $this->get_Token();
-        $this->afipModel->sign = $this->get_sign();
-        $this->afipModel->environment = $this->environment;
-        $this->afipModel->active = true;
-        $this->afipModel->user_id = $userId;
-        $this->afipModel->company_id = $companyId;
-        $this->afipModel->save();
-        $this->afipModel->refresh();
+        $afipModel = new AfipToken();
+        $afipModel->ws = $this->service;
+        $afipModel->unique_id = $this->get_unique_id();
+        $afipModel->generation_time = $this->get_generationTime();
+        $afipModel->expiration_time = $this->get_expirationTime();
+        $afipModel->token = $this->get_Token();
+        $afipModel->sign = $this->get_sign();
+        $afipModel->environment = $this->environment;
+        $afipModel->active = true;
+        $afipModel->user_id = $userId;
+        $afipModel->company_id = $companyId;
+        $afipModel->save();
+        $afipModel->refresh();
+
+        return $afipModel;
     }
 
     /**
@@ -328,7 +325,7 @@ abstract class WebService
         $expirationTime = $c->parse($this->get_expirationTime());
         $currentTime    = $c->parse($c->now());
 
-        return $currentTime->gt($currentTime);
+        return ($currentTime->gt($expirationTime) ? false : true);
     }
 
     abstract public function connect(): void;

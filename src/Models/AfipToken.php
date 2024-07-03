@@ -22,12 +22,6 @@ class AfipToken extends Model
         $expirationTime = Carbon::parse($this->expiration_time);
 
         // Verificar si el tiempo actual es antes del tiempo de expiración
-        if ($currentTime->lt($expirationTime)) {
-            // El tiempo actual es menor que expirationTime, el token está en el período válido
-            return true;
-        } else {
-            // El tiempo actual no es menor que expirationTime, el token ha expirado
-            return false;
-        }
+        return ($currentTime->gt($expirationTime) ? false : true);
     }
 }
