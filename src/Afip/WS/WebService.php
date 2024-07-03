@@ -5,8 +5,6 @@ namespace Cotein\ApiAfip\Afip\WS;
 use Carbon\Carbon;
 use Cotein\ApiAfip\Models\AfipToken;
 
-// URL DOC https://www.afip.gob.ar/fe/ayuda/documentos/wsfev1-COMPG.pdf
-
 abstract class WebService
 {
     protected $soapHttp;
@@ -46,6 +44,7 @@ abstract class WebService
      *
      * @return void
      */
+
     public function __construct($service, $environment, $company_cuit, $company_id, $user_id)
     {
         $this->service = strtoupper((string) $service);
@@ -62,18 +61,25 @@ abstract class WebService
             ->where('company_id', $company_id)
             ->first();
 
-        if (!$this->afipModel) {
-            $this->create_TA($service);
-            $this->saveAfipModel($company_id, $user_id);
-        } else {
-            // Verificar si el token ha expirado
-            $currentTime = time();
-            if ($currentTime > $this->afipModel->expiration_time || !$this->afipModel->isActive()) {
+        $currentTime = time();
+        // Verificar si el modelo de Afip existe y si el token está activo y no ha expirado
+        if (!$this->afipModel || $currentTime > $this->afipModel->expiration_time) {
+            // Log para depuración
+            error_log("Token expirado o no encontrado. Generando uno nuevo...");
+
+            if ($this->afipModel) {
+                // Desactivar el token expirado antes de crear uno nuevo
                 $this->afipModel->active = false;
                 $this->afipModel->save();
-                $this->create_TA($service);
-                $this->saveAfipModel($company_id, $user_id);
             }
+            $this->create_TA($service);
+            $this->saveAfipModel($company_id, $user_id);
+            // Recargar el modelo Afip después de crear y guardar el nuevo token
+            $this->afipModel = AfipToken::where('ws', $this->service)
+                ->where('active', true)
+                ->where('environment', $this->environment)
+                ->where('company_id', $company_id)
+                ->first();
         }
 
         // Actualizar las propiedades de la instancia con el token y la firma
