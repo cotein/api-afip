@@ -1582,7 +1582,7 @@
     </wsdl:binding>
     <wsdl:service name="FECredService">
         <wsdl:port binding="tns:FECredServiceSOAP" name="FECredServiceSOAP">
-            <soap:address location="https://fwshomo.afip.gov.ar:443/wsfecred/FECredService" />
+            <soap:address location="https://serviciosjava.afip.gob.ar:443/wsfecred/FECredService" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
