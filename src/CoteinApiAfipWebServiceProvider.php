@@ -3,6 +3,7 @@
 namespace Cotein\ApiAfip;
 
 use Illuminate\Support\ServiceProvider;
+use Cotein\ApiAfip\Afip;
 
 class CoteinApiAfipWebServiceProvider extends ServiceProvider
 {
@@ -19,10 +20,9 @@ class CoteinApiAfipWebServiceProvider extends ServiceProvider
         ], 'api-afip-migrations');
     }
 
-    public function register(): void
+    public function register()
     {
-        //en éste método registro los binds
-        $this->app->bind('Afip', function () {
+        $this->app->singleton('afip-web-service', function ($app) {
             return new Afip();
         });
     }

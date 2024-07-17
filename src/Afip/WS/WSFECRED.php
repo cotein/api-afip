@@ -11,14 +11,18 @@ class WSFECRED extends WebService
 {
     const SERVICE = 'wsfecred';
 
+    protected $authRequest;
     public function __construct($environment = 'testing', $company_cuit, $company_id, $user_id)
     {
         parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
 
         $this->afip_params = [
-            'token' => $this->token,
-            'sign' => $this->sign,
-            'cuitRepresentada' => $this->cuitRepresentada
+            'authRequest' => [
+                'token' => $this->token,
+                'sign' => $this->sign,
+                'cuitRepresentada' => $this->cuitRepresentada
+            ]
+
         ];
 
         $this->connect();
@@ -36,13 +40,13 @@ class WSFECRED extends WebService
         }
     }
 
-    public function consultarObligadoRecepción($cuitConsultada, $fechaEmision)
+    public function consultarMontoObligadoRecepcion($cuitConsultada, $fechaEmision)
     {
 
         $this->afip_params['cuitConsultada'] = $cuitConsultada;
         $this->afip_params['fechaEmision'] = $fechaEmision;
 
-        return $this->soapHttp->consultarObligadoRecepción($this->afip_params);
+        return $this->soapHttp->consultarMontoObligadoRecepcion($this->afip_params);
     }
 
     public function Dummy()

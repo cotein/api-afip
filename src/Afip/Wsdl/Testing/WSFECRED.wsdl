@@ -2,7 +2,6 @@
     xmlns:tns="http://ar.gob.afip.wsfecred/FECredService/"
     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     name="FECredService" targetNamespace="http://ar.gob.afip.wsfecred/FECredService/">
-    <script />
     <wsdl:types>
         <xsd:schema targetNamespace="http://ar.gob.afip.wsfecred/FECredService/">
             <xsd:element name="dummyResponse" type="tns:DummyResponseType" />
