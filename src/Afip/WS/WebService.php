@@ -64,13 +64,12 @@ abstract class WebService
 
         // Verificar si el modelo de Afip existe y si el token está activo y no ha expirado
         if (!$this->afipModel || $this->afipModel->isActive() == false) {
-            // Log para depuración
-            error_log("Token expirado o no encontrado. Generando uno nuevo...");
 
             if ($this->afipModel) {
                 // Desactivar el token expirado antes de crear uno nuevo
-                $this->afipModel->active = false;
-                $this->afipModel->save();
+                /* $this->afipModel->active = false;
+                $this->afipModel->save(); */
+                $this->afipModel->delete();
             }
 
             $this->create_TA($service);
