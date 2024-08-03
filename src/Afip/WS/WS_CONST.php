@@ -40,6 +40,10 @@ class WS_CONST
 
     const RESPONSE_LOGIN_CMS = __DIR__ . DIRECTORY_SEPARATOR . 'Xml' . DIRECTORY_SEPARATOR . 'response-loginCms.xml';
 
+    const DFESERVICIO_CONSULTA = __DIR__ . DIRECTORY_SEPARATOR . 'Xml' . DIRECTORY_SEPARATOR . 'Arba' . DIRECTORY_SEPARATOR . 'DFEServicioConsulta';
+
+    const DFESERVICIO_CONSULTA_CON_CUIT = __DIR__ . DIRECTORY_SEPARATOR . 'Xml' . DIRECTORY_SEPARATOR . 'Arba' . DIRECTORY_SEPARATOR . 'DFEServicioConsultaConCUIT.xml';
+
     const WSAA_TESTING_LOGINCMS     = 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms';
     const WSAA_TESTING_WSDL         = 'https://wsaahomo.afip.gov.ar/ws/services/LoginCms?wsdl';
     const WSAA_PRODUCTION_LOGINCMS  = 'https://wsaa.afip.gov.ar/ws/services/LoginCms';
@@ -64,6 +68,7 @@ class WS_CONST
             'PADRON' => "{$path}\WSPUC13",
             'CONSTANCIA' => "{$path}\WSCONSTANCIAINSCRIPCION",
             'WSFECRED' => "{$path}\WSFECRED",
+            'ARBA' => "{$path}\ARBA",
         ];
 
         return $ws[$name];
