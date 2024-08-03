@@ -2,6 +2,7 @@
 
 namespace Cotein\ApiAfip;
 
+use Cotein\ApiAfip\Afip\WS\ARBA;
 use Cotein\ApiAfip\Afip\WS\WebService;
 use Cotein\ApiAfip\Afip\WS\WS_CONST;
 
@@ -18,7 +19,7 @@ class Afip
      *
      * @return WebService
      */
-    public static function findWebService(string $service, string $environment, $company_cuit, $company_id, $user_id): WebService
+    public static function findWebService(string $service, string $environment, $company_cuit, $company_id, $user_id)
     {
         $serv = strtoupper($service);
 
