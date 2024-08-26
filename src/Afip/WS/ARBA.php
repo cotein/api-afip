@@ -42,6 +42,7 @@ class ARBA
     public function alicuota_sujeto(string $cuit): SimpleXMLElement
     {
         $xml_file = $this->xml_create($cuit);
+
         $data = [
             'user'     => env('ARBA_CUIT'),
             'password' => env('ARBA_CLAVE'),
