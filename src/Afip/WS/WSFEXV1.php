@@ -6,7 +6,7 @@ use Cotein\ApiAfip\Constantes;
 use Illuminate\Support\Facades\Log;
 
 
-class WSFEV1 extends WebService
+class WSFEXV1 extends WebService
 {
     const SERVICE = 'wsfexv1';
 
