@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class WSFEXV1 extends WebService
 {
-    const SERVICE = 'wsfexv1';
+    const SERVICE = 'wsfex';
 
     /**
      * Method __construct
