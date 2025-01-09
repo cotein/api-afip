@@ -12,6 +12,7 @@ class WSFECRED extends WebService
     const SERVICE = 'wsfecred';
 
     protected $authRequest;
+
     public function __construct($environment = 'testing', $company_cuit, $company_id, $user_id)
     {
         parent::__construct(self::SERVICE, $environment, $company_cuit, $company_id, $user_id);
