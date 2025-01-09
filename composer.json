@@ -12,17 +12,21 @@
         ],
         "post-install-cmd": [
             "@php -r \"chown('-Rf', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
-            "@php -r \"chmod('-Rf', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
             "@php -r \"chown('-Rf', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
-            "@php -r \"chmod('-Rf', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
+            "@php -r \"chown('www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba/DFEServicioConsulta.xml');\"",
+            "@php -r \"chmod('775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba/DFEServicioConsulta.xml');\"",
             "@echo 'El paquete se instaló correctamente.'",
-            "@echo 'El paquete se funcionará correctamente.'"
+            "@echo 'El paquete funcionará correctamente.'"
         ],
         "post-package-install": [
             "@php -r \"chown('-Rf', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
-            "@php -r \"chmod('-Rf', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml');\"",
             "@php -r \"chown('-Rf', 'www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
-            "@php -r \"chmod('-Rf', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
+            "@php -r \"chmod('-R', '775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba');\"",
+            "@php -r \"chown('www-data:www-data', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba/DFEServicioConsulta.xml');\"",
+            "@php -r \"chmod('775', '/var/www/html/dmit-back/vendor/cotein/api-afip/src/Afip/WS/Xml/Arba/DFEServicioConsulta.xml');\"",
             "@echo 'El paquete se instaló correctamente.'"
         ]
     },
