@@ -6,7 +6,6 @@
     xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
     xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
     targetNamespace="http://ar.gov.afip.dif.FEV1/">
-    <script />
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Service orientado al
         servicio de Facturacion electronica RG2485 V1</wsdl:documentation>
     <wsdl:types>
