@@ -134,6 +134,7 @@ class WSFEV1 extends WebService
         return $this->soapHttp->FEParamGetActividades($this->afip_params);
     }
 
+    //se agrega este nuevo método para obtener la condición de IVA del receptor
     public function FEParamGetCondicionIvaReceptor()
     {
         return $this->soapHttp->FEParamGetCondicionIvaReceptor($this->afip_params);
