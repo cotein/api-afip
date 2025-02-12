@@ -134,6 +134,11 @@ class WSFEV1 extends WebService
         return $this->soapHttp->FEParamGetActividades($this->afip_params);
     }
 
+    public function FEParamGetCondicionIvaReceptor()
+    {
+        return $this->soapHttp->FEParamGetCondicionIvaReceptor($this->afip_params);
+    }
+
     public function ConsultarComprobanteEmitido($CbteTipo, $PtoVta, $CbteNro)
     {
         $FeCompConsReq = [
